@@ -464,10 +464,22 @@ export default function AdminPage() {
                       </td>
                       <td className="p-4">
                         {p.receipt_url ? (
-                          <a href={p.receipt_url} target="_blank"
-                            className="text-[#C65D3B] underline hover:opacity-80">
-                            Ver comprovante
-                          </a>
+                          p.receipt_url.startsWith('data:image') ? (
+                            <a href={p.receipt_url} target="_blank" rel="noreferrer"
+                              className="text-[#C65D3B] underline hover:opacity-80">
+                              Ver imagem
+                            </a>
+                          ) : p.receipt_url.startsWith('data:application/pdf') ? (
+                            <a href={p.receipt_url} target="_blank" rel="noreferrer"
+                              className="text-[#C65D3B] underline hover:opacity-80">
+                              Ver PDF
+                            </a>
+                          ) : (
+                            <a href={p.receipt_url} target="_blank" rel="noreferrer"
+                              className="text-[#C65D3B] underline hover:opacity-80">
+                              Ver comprovante
+                            </a>
+                          )
                         ) : (
                           <span className="text-gray-400">—</span>
                         )}

@@ -40,3 +40,5 @@ next-env.d.ts
 # Scripts de teste e utilitários locais
 test-*.mjs
 fix-admin.mjs
+
+.vercel

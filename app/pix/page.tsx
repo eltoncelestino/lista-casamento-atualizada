@@ -29,21 +29,24 @@ export default function PixPage() {
     setSending(true)
 
     try {
-      // Em produção, você precisará de um bucket de storage (S3, R2, etc.)
-      // Aqui vamos simular o upload
-      const fileName = `${Date.now()}-${file.name}`
+      // 1. Faz upload do arquivo para o Vercel Blob
+      const formData = new FormData()
+      formData.append("file", file)
 
-      // Para um storage real, use:
-      // 1. AWS S3 + pre-signed URLs
-      // 2. Cloudflare R2
-      // 3. Uploadcare
-      // 4. Ou um endpoint próprio que salva no filesystem
+      const uploadRes = await fetch("/api/pix/upload", {
+        method: "POST",
+        body: formData,
+      })
 
-      // Por enquanto, vamos salvar apenas os metadados
-      // e assumir que o comprovante será enviado por outro meio
+      if (!uploadRes.ok) {
+        setStatus("error")
+        setSending(false)
+        return
+      }
 
-      const receipt_url = `comprovante/${fileName}` // URL simulada
+      const { url: receipt_url } = await uploadRes.json()
 
+      // 2. Salva a contribuição com a URL real do comprovante
       const res = await fetch("/api/pix", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -61,10 +64,8 @@ export default function PixPage() {
         setFile(null)
       } else {
         setStatus("error")
-        alert("Erro ao enviar comprovante")
       }
     } catch (err: any) {
-      alert("Erro: " + err.message)
       setStatus("error")
     }
 
