@@ -56,6 +56,9 @@ export default function PixPage() {
 
       if (res.ok) {
         setStatus("success")
+        setName("")
+        setAmount("")
+        setFile(null)
       } else {
         setStatus("error")
         alert("Erro ao enviar comprovante")

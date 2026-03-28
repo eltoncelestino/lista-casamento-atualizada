@@ -157,7 +157,7 @@ export default function PresentesPage() {
 
                     {gift.price && (
                       <p className="font-bold mb-4">
-                        R$ {Number(gift.price).toFixed(2)}
+                        {Number(gift.price).toLocaleString("pt-BR", { style: "currency", currency: "BRL" })}
                       </p>
                     )}
 

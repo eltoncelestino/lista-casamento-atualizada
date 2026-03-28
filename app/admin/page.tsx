@@ -288,7 +288,7 @@ export default function AdminPage() {
         {tab === "dashboard" && (
           <>
             <div className="grid md:grid-cols-3 gap-6">
-              <StatCard title="Total PIX" value={`R$ ${totalPix.toFixed(2)}`} />
+              <StatCard title="Total PIX" value={totalPix.toLocaleString("pt-BR", { style: "currency", currency: "BRL" })} />
               <StatCard title="Confirmados" value={confirmados} />
               <StatCard title="Ausentes" value={ausentes} />
             </div>
@@ -300,8 +300,8 @@ export default function AdminPage() {
                   <BarChart data={pixPorPessoa} margin={{ top: 10, right: 20, left: 10, bottom: 60 }}>
                     <CartesianGrid strokeDasharray="3 3" vertical={false} />
                     <XAxis dataKey="name" angle={-35} textAnchor="end" interval={0} tick={{ fontSize: 12 }} />
-                    <YAxis tickFormatter={(v) => `R$ ${v}`} tick={{ fontSize: 12 }} width={80} />
-                    <Tooltip formatter={(v: any) => [`R$ ${Number(v).toFixed(2)}`, "Valor"]} />
+                    <YAxis tickFormatter={(v) => v.toLocaleString("pt-BR", { style: "currency", currency: "BRL" })} tick={{ fontSize: 12 }} width={90} />
+                    <Tooltip formatter={(v: any) => [Number(v).toLocaleString("pt-BR", { style: "currency", currency: "BRL" }), "Valor"]} />
                     <Bar dataKey="value" fill="#C65D3B" radius={[6, 6, 0, 0]}>
                       {pixPorPessoa.map((_, i) => (
                         <Cell key={i} fill={COLORS[i % COLORS.length]} />
@@ -383,7 +383,7 @@ export default function AdminPage() {
                   <h3 className="font-semibold text-[#C65D3B]">{g.name}</h3>
                   <p className="text-sm text-gray-500 mt-1">{g.description}</p>
                   {g.price && (
-                    <p className="font-bold mt-2">R$ {Number(g.price).toFixed(2)}</p>
+                    <p className="font-bold mt-2">{Number(g.price).toLocaleString("pt-BR", { style: "currency", currency: "BRL" })}</p>
                   )}
                   {g.selected && (
                     <p className="text-xs text-green-600 mt-1">🎁 Reservado por {g.selected_by}</p>
@@ -440,7 +440,7 @@ export default function AdminPage() {
         {tab === "pix" && (
           <>
             <div className="grid md:grid-cols-2 gap-4 mb-6">
-              <StatCard title="Total Arrecadado" value={`R$ ${totalPix.toFixed(2)}`} />
+              <StatCard title="Total Arrecadado" value={totalPix.toLocaleString("pt-BR", { style: "currency", currency: "BRL" })} />
               <StatCard title="Contribuições" value={pix.length} />
             </div>
 
@@ -458,7 +458,7 @@ export default function AdminPage() {
                   {pix.map((p, i) => (
                     <tr key={p.id} className={i % 2 === 0 ? "bg-white" : "bg-gray-50"}>
                       <td className="p-4 font-medium">{p.name}</td>
-                      <td className="p-4 text-green-700 font-bold">R$ {Number(p.amount).toFixed(2)}</td>
+                      <td className="p-4 text-green-700 font-bold">{Number(p.amount).toLocaleString("pt-BR", { style: "currency", currency: "BRL" })}</td>
                       <td className="p-4 text-gray-500">
                         {new Date(p.created_at).toLocaleDateString("pt-BR")}
                       </td>
@@ -499,7 +499,7 @@ export default function AdminPage() {
                         <Cell key={index} fill={COLORS[index % COLORS.length]} />
                       ))}
                     </Pie>
-                    <Tooltip formatter={(v: any) => [`R$ ${Number(v).toFixed(2)}`, "Valor"]} />
+                    <Tooltip formatter={(v: any) => [Number(v).toLocaleString("pt-BR", { style: "currency", currency: "BRL" }), "Valor"]} />
                     <Legend iconType="circle" formatter={(value) => <span style={{ fontSize: 13 }}>{value}</span>} />
                   </PieChart>
                 </ResponsiveContainer>
