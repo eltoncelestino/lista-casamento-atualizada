@@ -233,7 +233,7 @@ export default function AdminPage() {
 
   const pixPorPessoa = pix.map(p => ({
     name: p.name || "Anônimo",
-    value: parseFloat(p.amount || 0)
+    value: parseFloat(String(p.amount || 0))
   }))
 
   if (loading) {
@@ -492,7 +492,7 @@ export default function AdminPage() {
                       outerRadius={120}
                       innerRadius={55}
                       paddingAngle={3}
-                      label={({ name, percent }) => `${(percent * 100).toFixed(0)}%`}
+                      label={({ percent }: { percent?: number }) => `${((percent ?? 0) * 100).toFixed(0)}%`}
                       labelLine={true}
                     >
                       {pixPorPessoa.map((_, index) => (
