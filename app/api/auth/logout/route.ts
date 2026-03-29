@@ -8,6 +8,7 @@ export async function POST(request: NextRequest) {
     secure: process.env.NODE_ENV === 'production',
     sameSite: 'strict',
     maxAge: 0,
+    expires: new Date(0),
     path: '/',
   })
 
