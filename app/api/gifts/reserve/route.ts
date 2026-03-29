@@ -6,6 +6,10 @@ export async function POST(request: NextRequest) {
     const body = await request.json()
     const { id, guestName } = body
 
+    if (!id || !guestName || !String(guestName).trim()) {
+      return NextResponse.json({ error: 'ID e nome do convidado são obrigatórios' }, { status: 400 })
+    }
+
     // Verifica se o presente ainda está disponível
     const [gift] = await query(`
       SELECT * FROM gifts WHERE id = $1 AND selected = false
