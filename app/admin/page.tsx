@@ -202,25 +202,51 @@ export default function AdminPage() {
   function exportarExcel() {
     const wb = XLSX.utils.book_new()
 
-    XLSX.utils.book_append_sheet(
-      wb,
-      XLSX.utils.json_to_sheet(gifts),
-      "Presentes"
-    )
+    // ── ABA 1: RESUMO ──────────────────────────────────────────
+    const resumo = [
+      { Informacao: 'Total de Presentes',       Valor: gifts.length },
+      { Informacao: 'Presentes Reservados',     Valor: gifts.filter(g => g.selected).length },
+      { Informacao: 'Presentes Disponíveis',    Valor: gifts.filter(g => !g.selected).length },
+      { Informacao: 'Total de Confirmações',    Valor: confirmacoes.length },
+      { Informacao: 'Confirmados (vão)',         Valor: confirmados },
+      { Informacao: 'Não vão',                  Valor: ausentes },
+      { Informacao: 'Total de Contribuições PIX', Valor: pix.length },
+      { Informacao: 'Total Arrecadado (R$)',    Valor: totalPix.toFixed(2) },
+    ]
+    XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(resumo), 'Resumo')
 
-    XLSX.utils.book_append_sheet(
-      wb,
-      XLSX.utils.json_to_sheet(confirmacoes),
-      "Confirmacoes"
-    )
+    // ── ABA 2: PRESENTES ───────────────────────────────────────
+    const giftsFormatados = gifts.map(g => ({
+      Nome:         g.name,
+      Descricao:    g.description || '',
+      'Preco (R$)': g.price ? Number(g.price).toFixed(2) : '',
+      'Link Produto': g.product_url || '',
+      'URL Imagem':  g.image_url || '',
+      Reservado:    g.selected ? 'Sim' : 'Não',
+      'Reservado Por': g.selected_by || '',
+    }))
+    XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(giftsFormatados), 'Presentes')
 
-    XLSX.utils.book_append_sheet(
-      wb,
-      XLSX.utils.json_to_sheet(pix),
-      "PIX"
-    )
+    // ── ABA 3: CONFIRMAÇÕES ────────────────────────────────────
+    const confirmacoesFormatadas = confirmacoes.map(c => ({
+      Nome:       c.nome,
+      Email:      c.email || '',
+      Mensagem:   c.mensagem || '',
+      Presenca:   c.comparecera ? 'Confirmado' : 'Não vai',
+      Data:       new Date(c.created_at).toLocaleDateString('pt-BR'),
+    }))
+    XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(confirmacoesFormatadas), 'Confirmacoes')
 
-    XLSX.writeFile(wb, "relatorio-casamento.xlsx")
+    // ── ABA 4: PIX ─────────────────────────────────────────────
+    const pixFormatados = pix.map(p => ({
+      Nome:           p.name,
+      'Valor (R$)':   Number(p.amount).toFixed(2),
+      Data:           new Date(p.created_at).toLocaleDateString('pt-BR'),
+      'Comprovante':  p.receipt_url ? 'Enviado' : 'Não enviado',
+    }))
+    XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(pixFormatados), 'PIX')
+
+    XLSX.writeFile(wb, `relatorio-casamento-${new Date().toLocaleDateString('pt-BR').replace(/\//g, '-')}.xlsx`)
   }
 
   // ================================
